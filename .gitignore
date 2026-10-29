@@ -1,24 +1,118 @@
-# Compiled class file
-*.class
+package com.studyguide;
 
-# Log file
-*.log
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
 
-# BlueJ files
-*.ctxt
+public class StudyGuideApp {
+    public static void main(String[] args) {
+        System.out.println("=====================================");
+        System.out.println("Java Study Guide Flashcards");
+        System.out.println("=====================================");
+        System.out.println("Instructions:");
+        System.out.println("- Press Enter to reveal the answer");
+        System.out.println("- Type 'k' for known, 'u' for unknown, 'n' for next, 'q' to quit");
+        System.out.println("- Cards are shuffled before the session begins\n");
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+        List<Flashcard> cards = buildFlashcards();
+        FlashcardDeck deck = new FlashcardDeck(cards);
+        Scanner scanner = new Scanner(System.in);
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+        int known = 0;
+        int missed = 0;
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+        while (deck.hasNext()) {
+            Flashcard card = deck.drawNext();
+
+            System.out.println("Term: " + card.getTerm());
+            System.out.println("Press Enter to reveal the definition...");
+            scanner.nextLine();
+
+            System.out.println("Definition: " + card.getDefinition());
+            System.out.println("Did you know it? [k = known, u = unknown, n = next card, q = quit]");
+
+            String input = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
+
+            while (!input.equals("k") && !input.equals("u") && !input.equals("n") && !input.equals("q")) {
+                System.out.println("Invalid input. Enter 'k', 'u', 'n', or 'q'.");
+                input = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
+            }
+
+            if (input.equals("k")) {
+                known++;
+            } else if (input.equals("u")) {
+                missed++;
+            } else if (input.equals("q")) {
+                printSummary(known, missed, deck.size());
+                return;
+            }
+
+            System.out.println();
+        }
+
+        printSummary(known, missed, cards.size());
+        scanner.close();
+    }
+
+    private static void printSummary(int known, int missed, int total) {
+        int reviewed = known + missed;
+        System.out.println("\nSession Summary");
+        System.out.println("----------------");
+        System.out.println("Reviewed: " + reviewed + " / " + total);
+        System.out.println("Known: " + known);
+        System.out.println("Missed: " + missed);
+        System.out.println("Thanks for studying!");
+    }
+
+    private static List<Flashcard> buildFlashcards() {
+        List<Flashcard> cards = new ArrayList<>();
+
+        cards.add(new Flashcard("Constructor", "Definition: A constructor is a special method in a class that is called when an object of that class is created. It is used to initialize the object's properties and set up any necessary resources. Constructors have the same name as the class and do not have a return type."));
+        cards.add(new Flashcard("Overriding", "Definition: Overriding is the process of providing a new implementation for a method that is already defined in a parent class. The method in the child class must have the same signature as the method in the parent class."));
+        cards.add(new Flashcard("Inheritance", "Definition: Inheritance is a mechanism in object-oriented programming that allows one class to acquire the properties and methods of another class. The class that inherits is called the child class, and the class being inherited from is called the parent class."));
+        cards.add(new Flashcard("Abstract data type", "Definition: An abstract data type (ADT) is a mathematical model for data types, defined by its behavior (operations) rather than its implementation."));
+        cards.add(new Flashcard("Shadowing", "Definition: Shadowing occurs when a variable in a local scope has the same name as a variable in an outer scope. The local variable hides the outer variable within its scope."));
+        cards.add(new Flashcard("Accessor method", "Definition: An accessor method is a method used to retrieve the value of a private field in a class. It is also known as a getter method."));
+        cards.add(new Flashcard("Anonymous class", "Definition: An anonymous class is a class that is defined without a name. It is typically used to create a single instance of a class without the need to define a separate named class."));
+        cards.add(new Flashcard("Class methods", "Definition: Class methods are methods that belong to the class itself rather than to any specific instance of the class. They are defined using the 'static' keyword and can be called without creating an instance of the class."));
+        cards.add(new Flashcard("Class user", "Definition: A class user is an entity (such as a programmer or a program) that utilizes a class to create objects and invoke its methods. Class users interact with the class's public interface to perform operations and access data."));
+        cards.add(new Flashcard("Class variables", "Definition: Class variables are variables that belong to the class itself rather than to any specific instance of the class. They are defined using the 'static' keyword and can be accessed using the class name."));
+        cards.add(new Flashcard("Closer in scope / scope", "Definition: Closer in scope refers to the concept of variable scope in programming, where a variable defined in a more local scope (such as within a method or block) takes precedence over a variable with the same name defined in an outer scope. The closer variable is the one that is accessible and used within that specific context."));
+        cards.add(new Flashcard("composition", "Definition: Composition is a design principle in object-oriented programming where a class is composed of one or more objects from other classes, allowing for a \"has-a\" relationship. It enables the creation of complex types by combining simpler ones, promoting code reuse and flexibility."));
+        cards.add(new Flashcard("Data fields", "Definition: Data fields, also known as instance variables or attributes, are variables that hold the state or properties of an object. They are defined within a class and can have different access levels (e.g., private, protected, public) to control visibility and encapsulation."));
+        cards.add(new Flashcard("Default constructor", "Definition: A default constructor is a constructor that takes no arguments and is automatically provided by the compiler if no other constructors are defined in the class. It initializes the object with default values."));
+        cards.add(new Flashcard("enumeration", "Definition: An enumeration (enum) is a special data type in programming that consists of a set of named constants. It is used to represent a fixed number of related values, making the code more readable and maintainable."));
+        cards.add(new Flashcard("exstended", "Definition: Extended refers to the concept of extending a class in object-oriented programming. When a class is extended, it inherits the properties and methods of the parent class, allowing for code reuse and the creation of specialized subclasses."));
+        cards.add(new Flashcard("fundemental classes", "Definition: Fundamental classes are the basic building blocks of object-oriented programming. They provide essential functionality and serve as the foundation for creating more complex classes and objects."));
+        cards.add(new Flashcard("has-a relationship", "Definition: A has-a relationship is a type of association between classes in object-oriented programming, where one class contains or is composed of another class. It indicates that an object of one class \"has\" an object of another class as a part of its state or behavior."));
+        cards.add(new Flashcard("information hiding", "Definition: Information hiding is a principle in software design that involves restricting access to the internal details of a class or module. It promotes encapsulation by exposing only the necessary interfaces and keeping implementation details hidden, reducing dependencies and improving maintainability."));
+        cards.add(new Flashcard("inner classes", "Definition: Inner classes are classes defined within the scope of another class. They can access the members of the enclosing class, including private members, and are often used to logically group classes that are only used in one place, enhancing encapsulation and organization."));
+        cards.add(new Flashcard("instance variables", "Definition: Instance variables are variables that belong to an instance of a class. Each object created from the class has its own copy of the instance variables, which hold the state or properties of that specific object. They are defined within the class but outside any method."));
+        cards.add(new Flashcard("instance methods", "Definition: Instance methods are methods that operate on instances of a class. They can access instance variables and other instance methods, and they require an object of the class to be invoked. They are defined without the 'static' keyword."));
+        cards.add(new Flashcard("is-a relationship", "Definition: An is-a relationship is a type of relationship in object-oriented programming that indicates that one class is a specialized version of another class. It represents inheritance, where the child class inherits the properties and behaviors of the parent class, establishing a hierarchical relationship."));
+        cards.add(new Flashcard("java.lang package", "Definition: The java.lang package is a fundamental package in the Java programming language that provides classes and interfaces for core functionality, such as basic data types, string manipulation, mathematical operations, and system-level operations. It is automatically imported in every Java program."));
+        cards.add(new Flashcard("libary of classes", "Definition: A library of classes is a collection of pre-written classes and methods that can be used by programmers to perform common tasks and operations. It provides reusable code that simplifies development and promotes code efficiency."));
+        cards.add(new Flashcard("Local classes", "Definition: Local classes are classes that are defined within a method or a block of code. They can only be accessed from within that method or block and are typically used for implementing specific functionality that is not needed elsewhere in the program."));
+        cards.add(new Flashcard("mutator methods", "Definition: Mutator methods, also known as setter methods, are methods used to modify the value of a private field in a class. They provide controlled access to the internal state of an object, allowing changes to be made while maintaining encapsulation."));
+        cards.add(new Flashcard("NaN", "Definition: NaN stands for 'Not a Number' and is a special value used in computing to represent undefined or unrepresentable numerical results, such as the result of dividing zero by zero or taking the square root of a negative number."));
+        cards.add(new Flashcard("nanosecond", "Definition: A nanosecond is a unit of time equal to one billionth (1/1,000,000,000) of a second. It is commonly used in computing and scientific applications where precise timing is required."));
+        cards.add(new Flashcard("nested classes", "Definition: Nested classes are classes defined within the scope of another class. They can be categorized into static nested classes and inner classes. Static nested classes do not have access to the instance variables of the enclosing class, while inner classes do. Nested classes help organize code and encapsulate functionality."));
+        cards.add(new Flashcard("new operator", "Definition: The new operator in programming is used to create new instances of objects or allocate memory for them. In languages like Java, it is used to instantiate classes and invoke constructors, returning a reference to the newly created object."));
+        cards.add(new Flashcard("nonstatic member classes", "Definition: Nonstatic member classes, also known as inner classes, are classes defined within another class that are associated with an instance of the enclosing class. They can access the instance variables and methods of the enclosing class, allowing for a close relationship between the two classes."));
+        cards.add(new Flashcard("nonstatic methods", "Definition: Nonstatic methods are methods that belong to an instance of a class rather than the class itself. They can access instance variables and other nonstatic methods, and they require an object of the class to be invoked. Nonstatic methods are defined without the 'static' keyword."));
+        cards.add(new Flashcard("optional classes", "Definition: Optional classes are classes that may or may not be included in a program or library. They provide additional functionality that is not essential for the core operation of the program but can be used to enhance features or provide extra capabilities when needed."));
+        cards.add(new Flashcard("override", "Definition: Override refers to the ability of a subclass to provide a specific implementation of a method that is already defined in its superclass. When a method is overridden, the subclass's version of the method is called instead of the superclass's version, allowing for polymorphic behavior."));
+        cards.add(new Flashcard("primary key", "Definition: A primary key is a unique identifier for a record in a database table. It ensures that each record can be uniquely identified and accessed, and it is often used to establish relationships between tables in a relational database."));
+        cards.add(new Flashcard("private access", "Definition: Private access refers to the access level of class members (variables and methods) that are declared as private. Private members can only be accessed within the same class and are not visible to other classes, promoting encapsulation and data hiding."));
+        cards.add(new Flashcard("programer-defined data types", "Definition: Programmer-defined data types are custom data types created by programmers to represent specific concepts or entities in their applications. These data types can be implemented using classes, structures, or other programming constructs, allowing for more meaningful and organized code."));
+        cards.add(new Flashcard("refrence to an object", "Definition: A reference to an object is a variable that holds the memory address of an object in programming. It allows access to the object's properties and methods, enabling interaction with the object without directly manipulating its memory."));
+        cards.add(new Flashcard("reference to an object", "Definition: A reference to an object is a variable that holds the memory address of an object in programming. It allows access to the object's properties and methods, enabling interaction with the object without directly manipulating its memory."));
+        cards.add(new Flashcard("static member classes", "Definition: Static member classes, also known as static nested classes, are classes defined within another class that do not have access to the instance variables and methods of the enclosing class. They can be instantiated without an instance of the enclosing class and are often used for grouping related classes together."));
+        cards.add(new Flashcard("this reference", "Definition: The 'this' reference in programming refers to the current instance of a class. It is used within an instance method or constructor to refer to the object that is invoking the method or being constructed. It allows access to the object's fields and methods, and can also be used to differentiate between instance variables and parameters with the same name."));
+        cards.add(new Flashcard("top-level classes", "Definition: Top-level classes are classes that are defined directly within a package and are not nested within any other class. They can be public or package-private and serve as the main building blocks of a Java program, providing the structure and functionality needed for the application."));
+        cards.add(new Flashcard("wildcard symbol", "Definition: The wildcard symbol, represented by the '?' character in programming, is used in generics to denote an unknown type. It allows for flexibility in method parameters and class definitions, enabling the use of different types without specifying a concrete type. The wildcard can be bounded (e.g., <? extends T> or <? super T>) to restrict the types that can be used with it."));
+
+        return cards;
+    }
+}
